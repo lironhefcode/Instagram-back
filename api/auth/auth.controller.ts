@@ -1,0 +1,35 @@
+import { Request, Response } from "express";
+import { User } from "../../models/userInterface";
+import { authService } from "./auth.service";
+
+
+
+export async function login(req:Request,res:Response){
+    try{
+
+        const {username,password} = req.body
+        const user  = await authService.login(username,password)
+        const loginToken = authService.getLoginToken(user)
+            res.cookie('loginToken', loginToken, {  secure: true })
+            res.json(user)
+        
+    }catch(err){
+        console.log('error login')
+        res.status(401).send({ err: 'Failed to Login' })
+    }
+}
+
+export async function signup(req:Request,res:Response) {
+    try{
+        const {fullname,username,password}  = req.body
+        const account = await authService.signup(fullname,username,password)
+        const user = await authService.login(account.username,account.password)
+        const loginToken = authService.getLoginToken(user)
+        res.cookie('loginToken', loginToken, {  secure: true })
+        res.json(user)
+    }catch(err){
+        console.log('error signup')
+        res.status(401).send({ err: 'Failed to signup' })
+    }
+  
+}
