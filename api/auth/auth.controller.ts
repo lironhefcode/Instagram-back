@@ -33,3 +33,11 @@ export async function signup(req:Request,res:Response) {
     }
   
 }
+export async function logout(req, res:Response) {
+	try {
+		res.clearCookie('loginToken')
+		res.send({ msg: 'Logged out successfully' })
+	} catch (err) {
+		res.status(400).send({ err: 'Failed to logout' })
+	}
+}
