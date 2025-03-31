@@ -12,6 +12,7 @@ export const authService ={
     signup,
 }
 async function login(username:string,password:string) {
+    
     try{
         const user = await userService.getByUsername(username)
         if(!user) return Promise.reject('no user')
@@ -20,6 +21,7 @@ async function login(username:string,password:string) {
      user.password = ''
     return user
     }catch(err){
+        console.log('login service')
         console.log(err)
         throw err
     }

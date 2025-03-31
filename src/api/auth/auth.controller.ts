@@ -6,7 +6,7 @@ import { authService } from "./auth.service";
 
 export async function login(req:Request,res:Response){
     try{
-
+        
         const {username,password} = req.body
         const user  = await authService.login(username,password)
         const loginToken = authService.getLoginToken(user)
@@ -14,21 +14,26 @@ export async function login(req:Request,res:Response){
             res.json(user)
         
     }catch(err){
-        console.log('error login')
+        console.log('conroller')
+        console.log('error login',err)
         res.status(401).send({ err: 'Failed to Login' })
     }
 }
 
 export async function signup(req:Request,res:Response) {
+    console.log(req.body)
     try{
         const {fullname,username,password}  = req.body
+       
         const account = await authService.signup(fullname,username,password)
-        const user = await authService.login(account.username,account.password)
+      
+        const user = await authService.login(account.username,password)
         const loginToken = authService.getLoginToken(user)
         res.cookie('loginToken', loginToken, {  secure: true })
         res.json(user)
     }catch(err){
-        console.log('error signup')
+     
+        console.log('error signup',err)
         res.status(401).send({ err: 'Failed to signup' })
     }
   
