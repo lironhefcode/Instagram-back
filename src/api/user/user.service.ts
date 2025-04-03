@@ -34,6 +34,7 @@ async function addUser(username:string,fullname:string,password:string) {
         fullname,
         password,
         imgUrl: 'userProfile.png',
+        stories:[],
         following: [],
         followers: [],
         likedStoryIds: [],  

@@ -9,13 +9,8 @@ export const stroyService = {
 const collectionName =process.env.POSTS_COLLECTION_NAME as string
 async function query(filterBy = { txt: '' }) {
 	try {
-       
-        
 		const collection = await dbService.getCollection(collectionName)
-		var storyCursor =  collection.find({})
-
-		
-
+		var storyCursor =  collection.aggregate([{$sample: {size: 7}}])
 		const story = await storyCursor.toArray()
 		return story
 	} catch (err) {

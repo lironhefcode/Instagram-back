@@ -2,6 +2,6 @@
 import { ObjectId } from "mongodb"
 export interface byUserIntreface{
     _id:ObjectId,
-    fullname:string,
+    username:string,
     imgUrl:string
 }
