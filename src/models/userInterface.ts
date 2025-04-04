@@ -3,7 +3,7 @@ import { byUserIntreface } from "./byUserInterface";
 
 
 export interface User{
-    _id?:ObjectId,
+    _id:string
 	username: string,
 	password:string,
 	fullname: string,
@@ -14,6 +14,6 @@ export interface User{
 	} [],
 	following: byUserIntreface[]
 	followers:byUserIntreface[] ,
-	likedStoryIds: String[], 
+	likedStoryIds: string[], 
 	savedStoryIds: string[],
 }
