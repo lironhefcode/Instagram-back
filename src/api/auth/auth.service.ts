@@ -10,6 +10,7 @@ export const authService ={
     login,
     getLoginToken,
     signup,
+    validateToken,
 }
 async function login(username:string,password:string) {
     
@@ -38,4 +39,14 @@ async function signup(username:string,fullname:string,password:string) {
 function getLoginToken(user:User) {
 	
 	return cryptr.encrypt(JSON.stringify(user))
+}
+function validateToken(loginToken : string) : User | null {
+	try {
+		const json = cryptr.decrypt(loginToken)
+		const loggedinUser = JSON.parse(json)
+		return loggedinUser
+	} catch (err) {
+		console.log('Invalid login token')
+	}
+	return null
 }

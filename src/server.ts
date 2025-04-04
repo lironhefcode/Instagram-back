@@ -6,6 +6,7 @@ import path from 'path'
 import { storyRoutes } from './api/story/story.routes'
 import { authRoutes } from './api/auth/auth.routes'
 import cookieParser from 'cookie-parser'
+import { setupAsyncLocalStorage } from './midlewaers/setupAls.middleware'
 
 const app :Express = express()
 if (process.env.NODE_ENV === 'production') {
@@ -24,6 +25,8 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(cookieParser())
 app.use(express.json())
+app.all('*',setupAsyncLocalStorage)
+
 
 app.use('/api/story', storyRoutes)
 app.use('/api/auth',authRoutes)
