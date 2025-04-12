@@ -27,10 +27,15 @@ async function query(filterBy = { txt: '' }) {
 	}
 }
 async function add(story: story) {
-	const { loggedinUser } = asynLocalStorage.getStore() as Asl
-	const collection = await dbService.getCollection(collectionName)
-	await collection.insertOne(story)
-	return story
+	try{
+		const collection = await dbService.getCollection(collectionName)
+		await collection.insertOne(story)
+		return story
+	
+	}catch(err){
+		throw err
+	}
+	
 }
 async function getStoryById(storyId: string) {
 	const collection = await dbService.getCollection(collectionName)
