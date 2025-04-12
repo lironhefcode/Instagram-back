@@ -13,6 +13,7 @@ export const userService = {
     addUser,
     handlefollow,
     handleLike,
+    createminiUser,
 }
 
 
@@ -50,17 +51,19 @@ async function handlefollow(username:string) {
                 secondaryUserFollower = secondaryUser.followers.filter(user => user._id !==  ObjectId.createFromHexString(secondaryUser._id ))
                 loggedUserFollowing =  loggedUser.following.filter(user => user._id !==  ObjectId.createFromHexString(secondaryUser._id ))
             }else{
-                const miniLogggedinUser : byUserIntreface = _createminiUser(loggedUser)
-                const minisecondaryUser: byUserIntreface = _createminiUser(secondaryUser)
+                const miniLogggedinUser : byUserIntreface = createminiUser(loggedUser)
+                const minisecondaryUser: byUserIntreface = createminiUser(secondaryUser)
                secondaryUserFollower = [...secondaryUser.followers,miniLogggedinUser] 
                loggedUserFollowing =  [...loggedinUser.following,minisecondaryUser] 
             }
             await collection.updateOne({_id : ObjectId.createFromHexString(secondaryUser._id)},{$set:{followers:secondaryUserFollower}})
             const updatedUser = await collection.updateOne({_id : ObjectId.createFromHexString(loggedUser._id)},{$set:{following:loggedUserFollowing}})
             return updatedUser
+        } else{
+            throw new Error('one of the users are not valid')
         }
     }catch(err){
-
+        throw err
     }
 }
 
@@ -90,7 +93,7 @@ async function handleLike(storyId : string): Promise<User>{
     }
 }
 
-function _createminiUser(user:User): byUserIntreface{
+function createminiUser(user:User): byUserIntreface{
     return{
         _id: ObjectId.createFromHexString(user._id ) ,
         username:user.username,
