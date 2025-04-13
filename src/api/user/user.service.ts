@@ -102,9 +102,9 @@ function createminiUser(user:User): byUserIntreface{
 async function updateImg(imgUrl:string) {
     try{
         const loggedUser =  await getLoggedUser()
-       
+        
         const collection = await dbService.getCollection(collectionName)
-        collection.updateOne({_id: ObjectId.createFromHexString(loggedUser._id)},{$set:{imgUrl:imgUrl}})
+        collection.updateOne({_id:new ObjectId(loggedUser._id.toString())},{$set:{imgUrl:imgUrl}})
         const user = await getByUsername(loggedUser.username) as User
         return user
     }catch(err){
