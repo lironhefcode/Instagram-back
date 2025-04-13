@@ -14,6 +14,7 @@ export const userService = {
     handlefollow,
     handleLike,
     createminiUser,
+    updateImg,
 }
 
 
@@ -40,9 +41,7 @@ async function handlefollow(username:string) {
     try{
         const collection = await dbService.getCollection(collectionName)
         const secondaryUser = await getByUsername(username)
-        const loggedinUser = (asynLocalStorage.getStore() as Asl).loggedinUser as User
-       
-        const loggedUser = await getByUsername(loggedinUser.username)
+        const loggedUser =  await getLoggedUser()
         
         if(secondaryUser && loggedUser ){
             const isFollowed = loggedUser.following.some(id => id.username === secondaryUser.username)
@@ -55,7 +54,7 @@ async function handlefollow(username:string) {
                 const miniLogggedinUser : byUserIntreface = createminiUser(loggedUser)
                 const minisecondaryUser: byUserIntreface = createminiUser(secondaryUser)
                secondaryUserFollower = [...secondaryUser.followers,miniLogggedinUser] 
-               loggedUserFollowing =  [...loggedinUser.following,minisecondaryUser] 
+               loggedUserFollowing =  [...loggedUser.following,minisecondaryUser] 
             }
             await collection.updateOne({_id : ObjectId.createFromHexString(secondaryUser._id)},{$set:{followers:secondaryUserFollower}})
             const updatedUser = await collection.updateOne({_id : ObjectId.createFromHexString(loggedUser._id)},{$set:{following:loggedUserFollowing}})
@@ -71,8 +70,7 @@ async function handlefollow(username:string) {
 
 async function handleLike(storyId : string): Promise<User>{
     try{
-        const userFromCookeis = (asynLocalStorage.getStore() as Asl).loggedinUser as User
-        const loggedUser = await getByUsername(userFromCookeis.username)
+        const loggedUser =  await getLoggedUser()
         if(loggedUser){
             const isLiked = loggedUser.likedStoryIds.some(id => id === storyId)
             let likedStoryIds : string[]
@@ -101,7 +99,24 @@ function createminiUser(user:User): byUserIntreface{
         imgUrl:user.imgUrl
 }
 }
+async function updateImg(imgUrl:string) {
+    try{
+        const loggedUser =  await getLoggedUser()
+       
+        const collection = await dbService.getCollection(collectionName)
+        collection.updateOne({_id: ObjectId.createFromHexString(loggedUser._id)},{$set:{imgUrl:imgUrl}})
+        const user = await getByUsername(loggedUser.username) as User
+        return user
+    }catch(err){
+        throw err
+    }
 
+}
+async function getLoggedUser() {
+    const userFromCookeis = (asynLocalStorage.getStore() as Asl).loggedinUser as User
+        const loggedUser = await getByUsername(userFromCookeis.username) as User
+        return loggedUser
+}
 
 async function addUser(username:string,fullname:string,password:string) {
     const newUser:Omit<User, '_id'>  = {

@@ -43,3 +43,14 @@ export async function follow(req:Request, res:Response) {
         res.status(404).send({err:'faild to follow'})
     }
 }
+export async function updateImg(req:Request, res:Response) {
+    try{
+        const {imgUrl} = req.body
+        const user = await userService.updateImg(imgUrl)
+        res.json(user)
+    }catch(err){
+        console.log('failed to update img',err)
+        res.status(404).send({err:'update img'})
+    }
+   
+}
