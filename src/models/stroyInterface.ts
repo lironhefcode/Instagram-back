@@ -9,3 +9,7 @@ export interface story{
     comments:comentInterface[],
     likedBy:byUserIntreface[],
 }
+export interface Ministory{
+    _id:string,
+    mgUrl:string,
+}

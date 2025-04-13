@@ -43,6 +43,7 @@ async function handlefollow(username:string) {
         const loggedinUser = (asynLocalStorage.getStore() as Asl).loggedinUser as User
        
         const loggedUser = await getByUsername(loggedinUser.username)
+        
         if(secondaryUser && loggedUser ){
             const isFollowed = loggedUser.following.some(id => id.username === secondaryUser.username)
             let secondaryUserFollower : byUserIntreface[]
@@ -60,7 +61,7 @@ async function handlefollow(username:string) {
             const updatedUser = await collection.updateOne({_id : ObjectId.createFromHexString(loggedUser._id)},{$set:{following:loggedUserFollowing}})
             return updatedUser
         } else{
-            throw new Error('one of the users are not valid')
+            throw ('one of the users are not valid')
         }
     }catch(err){
         throw err
