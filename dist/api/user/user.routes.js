@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.storyRoutes = void 0;
+exports.userRoutes = void 0;
 const express_1 = __importDefault(require("express"));
-const story_controller_1 = require("./story.controller");
+const user_controller_1 = require("./user.controller");
 const requierdAuth_middleware_1 = require("../../midlewaers/requierdAuth.middleware");
 const router = express_1.default.Router();
-router.get('/', requierdAuth_middleware_1.requireAuth, story_controller_1.loadStories);
-router.post('/', requierdAuth_middleware_1.requireAuth, story_controller_1.addStory);
-exports.storyRoutes = router;
-//# sourceMappingURL=story.routes.js.map
+router.post('/follow', requierdAuth_middleware_1.requireAuth, user_controller_1.follow);
+router.post('/like', requierdAuth_middleware_1.requireAuth, user_controller_1.like);
+exports.userRoutes = router;
+//# sourceMappingURL=user.routes.js.map

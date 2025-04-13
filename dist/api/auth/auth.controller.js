@@ -6,6 +6,7 @@ exports.logout = logout;
 const auth_service_1 = require("./auth.service");
 async function login(req, res) {
     try {
+        console.log('hello');
         const { username, password } = req.body;
         const user = await auth_service_1.authService.login(username, password);
         const loginToken = auth_service_1.authService.getLoginToken(user);

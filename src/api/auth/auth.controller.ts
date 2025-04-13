@@ -6,7 +6,7 @@ import { authService } from "./auth.service";
 
 export async function login(req:Request,res:Response){
     try{
-        
+        console.log('hello')
         const {username,password} = req.body
         const user  = await authService.login(username,password)
         const loginToken = authService.getLoginToken(user)

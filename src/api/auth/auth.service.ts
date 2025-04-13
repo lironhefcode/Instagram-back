@@ -36,9 +36,9 @@ async function signup(username:string,fullname:string,password:string) {
     const user = await userService.addUser(username,fullname,hash)
     return user
 }
-function getLoginToken(user:User) {
+ function getLoginToken(user:User) {
 	
-	return cryptr.encrypt(JSON.stringify(user))
+	return  cryptr.encrypt(JSON.stringify(user))
 }
 function validateToken(loginToken : string) : User | null {
 	try {

@@ -12,6 +12,7 @@ exports.authService = {
     login,
     getLoginToken,
     signup,
+    validateToken,
 };
 async function login(username, password) {
     try {
@@ -43,5 +44,16 @@ async function signup(username, fullname, password) {
 }
 function getLoginToken(user) {
     return cryptr.encrypt(JSON.stringify(user));
+}
+function validateToken(loginToken) {
+    try {
+        const json = cryptr.decrypt(loginToken);
+        const loggedinUser = JSON.parse(json);
+        return loggedinUser;
+    }
+    catch (err) {
+        console.log('Invalid login token');
+    }
+    return null;
 }
 //# sourceMappingURL=auth.service.js.map
