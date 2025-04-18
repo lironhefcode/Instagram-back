@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb"
 import { Asl } from "../../models/aslInterface"
-import { story } from "../../models/stroyInterface"
+import { NewStory, story } from "../../models/stroyInterface"
 import { User } from "../../models/userInterface"
 import { asynLocalStorage } from "../../services/als.service"
 import { dbService } from "../../services/db.service"
@@ -26,11 +26,20 @@ async function query(filterBy = { txt: '' }) {
 		throw err
 	}
 }
-async function add(story: story) {
+async function add(newStory : NewStory) {
 	try{
+		const userFromCookeis = (asynLocalStorage.getStore() as Asl).loggedinUser as User
+		let story : Omit<story,'_id'> ={
+			
+			txt: newStory.txt,
+			imgUrl: newStory.imgUrl,
+			by: userService.createminiUser(userFromCookeis),
+			comments: [],
+			likedBy: []
+		}
 		const collection = await dbService.getCollection(collectionName)
-		await collection.insertOne(story)
-		return story
+		const createdStory = await collection.insertOne(story)
+		return createdStory
 	
 	}catch(err){
 		throw err

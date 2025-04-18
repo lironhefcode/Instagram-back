@@ -11,5 +11,9 @@ export interface story{
 }
 export interface Ministory{
     _id:string,
-    mgUrl:string,
+    imgUrl:string,
+}
+export interface NewStory{
+    txt:string,
+    imgUrl:string,
 }
