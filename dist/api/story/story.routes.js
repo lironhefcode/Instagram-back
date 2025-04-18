@@ -1,14 +1,24 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.storyRoutes = void 0;
 const express_1 = __importDefault(require("express"));
 const story_controller_1 = require("./story.controller");
 const requierdAuth_middleware_1 = require("../../midlewaers/requierdAuth.middleware");
 const router = express_1.default.Router();
-router.get('/', requierdAuth_middleware_1.requireAuth, story_controller_1.loadStories);
-router.post('/', requierdAuth_middleware_1.requireAuth, story_controller_1.addStory);
+router.get(
+  "/",
+  requierdAuth_middleware_1.requireAuth,
+  story_controller_1.loadStories,
+);
+router.post(
+  "/",
+  requierdAuth_middleware_1.requireAuth,
+  story_controller_1.addStory,
+);
 exports.storyRoutes = router;
 //# sourceMappingURL=story.routes.js.map
