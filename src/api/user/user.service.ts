@@ -41,16 +41,17 @@ async function handlefollow(username: string) {
 
     if (secondaryUser && loggedUser) {
       const isFollowed = loggedUser.following.some(
-        (id) => id.username === secondaryUser.username,
+        (user) => user.username === secondaryUser.username,
       )
+
       let secondaryUserFollower: byUserIntreface[]
       let loggedUserFollowing: byUserIntreface[]
       if (isFollowed) {
         secondaryUserFollower = secondaryUser.followers.filter(
-          (user) => user._id !== new ObjectId(secondaryUser._id),
+          (user) => user.username !== loggedUser.username,
         )
         loggedUserFollowing = loggedUser.following.filter(
-          (user) => user._id !== new ObjectId(secondaryUser._id),
+          (user) => user.username !== secondaryUser.username,
         )
       } else {
         const miniLogggedinUser: byUserIntreface = createminiUser(loggedUser)
