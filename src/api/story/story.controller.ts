@@ -15,7 +15,6 @@ export async function loadStories(req: Request, res: Response) {
 }
 export async function addStory(req: Request, res: Response) {
   try {
-    console.log("enter")
     const newStory: NewStory = req.body
     const story = await stroyService.add(newStory)
     const user = await userService.addStory(story)
@@ -23,5 +22,14 @@ export async function addStory(req: Request, res: Response) {
   } catch (err) {
     console.error("Failed to add stories", err)
     res.status(400).send({ err: "Failed to add story" })
+  }
+}
+export async function comment(req: Request, res: Response) {
+  try {
+    const { txt, storyId } = req.body
+    const comment = await stroyService.comment(txt, storyId)
+    res.json(comment)
+  } catch (err) {
+    res.status(400).send({ err: "Failed to add commet" })
   }
 }

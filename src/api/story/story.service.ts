@@ -7,12 +7,15 @@ import { dbService } from "../../services/db.service"
 import dotenv from "dotenv"
 import { userService } from "../user/user.service"
 import { byUserIntreface } from "../../models/byUserInterface"
+import { comentInterface } from "../../models/comentInerface"
+import { utilService } from "../../services/util"
 dotenv.config()
 
 export const stroyService = {
   query,
   add,
   like,
+  comment,
 }
 const collectionName = process.env.POSTS_COLLECTION_NAME as string
 async function query(filterBy = { txt: "" }) {
@@ -40,6 +43,25 @@ async function add(newStory: NewStory) {
     const res = await collection.insertOne(story)
     const createdStory: story = { ...story, _id: res.insertedId }
     return createdStory
+  } catch (err) {
+    throw err
+  }
+}
+async function comment(txt: string, storyId: string) {
+  try {
+    const collection = await dbService.getCollection(collectionName)
+    const userFromCookeis = (asynLocalStorage.getStore() as Asl)
+      .loggedinUser as User
+    const comment: comentInterface = {
+      id: utilService.makeId(),
+      txt,
+      by: userService.createminiUser(userFromCookeis),
+      likedBy: [],
+    }
+    const story = await getStoryById(storyId)
+    const comments = [...story.comments, comment]
+    collection.updateOne({ _id: story._id }, { $set: { comments } })
+    return comment
   } catch (err) {
     throw err
   }
