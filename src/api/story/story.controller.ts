@@ -27,6 +27,7 @@ export async function addStory(req: Request, res: Response) {
 export async function comment(req: Request, res: Response) {
   try {
     const { txt, storyId } = req.body
+    debugger
     const comment = await stroyService.comment(txt, storyId)
     res.json(comment)
   } catch (err) {

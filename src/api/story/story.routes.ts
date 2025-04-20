@@ -5,5 +5,5 @@ const router = express.Router()
 
 router.get("/", requireAuth, loadStories)
 router.post("/", requireAuth, addStory)
-router.post("/", requireAuth, comment)
+router.post("/comment", requireAuth, comment)
 export const storyRoutes = router
