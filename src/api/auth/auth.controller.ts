@@ -19,13 +19,12 @@ export async function signup(req: Request, res: Response) {
     const { fullname, username, password } = req.body
 
     const account = await authService.signup(fullname, username, password)
-
-    const user = await authService.login(account.username, password)
+    const user = await authService.login(username, password)
     const loginToken = authService.getLoginToken(user)
     res.cookie("loginToken", loginToken, { secure: true })
     res.json(user)
   } catch (err) {
-    res.status(401).send({ err: "Failed to signup" })
+    res.status(401).send({ err: "Failed to signup " + err })
   }
 }
 export async function logout(req, res: Response) {

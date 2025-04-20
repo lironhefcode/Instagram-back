@@ -6,6 +6,7 @@ import { asynLocalStorage } from "../../services/als.service"
 import { byUserIntreface } from "../../models/byUserInterface"
 import { ObjectId } from "mongodb"
 import { follow } from "./user.controller"
+import { Ministory, story } from "../../models/stroyInterface"
 
 export const userService = {
   getByUsername,
@@ -14,6 +15,7 @@ export const userService = {
   handleLike,
   createminiUser,
   updateImg,
+  addStory,
 }
 
 const collectionName = process.env.USER_COLLECTION_NAME as string
@@ -45,12 +47,10 @@ async function handlefollow(username: string) {
       let loggedUserFollowing: byUserIntreface[]
       if (isFollowed) {
         secondaryUserFollower = secondaryUser.followers.filter(
-          (user) =>
-            user._id !== ObjectId.createFromHexString(secondaryUser._id),
+          (user) => user._id !== new ObjectId(secondaryUser._id),
         )
         loggedUserFollowing = loggedUser.following.filter(
-          (user) =>
-            user._id !== ObjectId.createFromHexString(secondaryUser._id),
+          (user) => user._id !== new ObjectId(secondaryUser._id),
         )
       } else {
         const miniLogggedinUser: byUserIntreface = createminiUser(loggedUser)
@@ -59,13 +59,14 @@ async function handlefollow(username: string) {
         loggedUserFollowing = [...loggedUser.following, minisecondaryUser]
       }
       await collection.updateOne(
-        { _id: ObjectId.createFromHexString(secondaryUser._id) },
+        { _id: new ObjectId(secondaryUser._id) },
         { $set: { followers: secondaryUserFollower } },
       )
-      const updatedUser = await collection.updateOne(
-        { _id: ObjectId.createFromHexString(loggedUser._id) },
+      await collection.updateOne(
+        { _id: new ObjectId(loggedUser._id) },
         { $set: { following: loggedUserFollowing } },
       )
+      const updatedUser = await getByUsername(loggedUser.username)
       return updatedUser
     } else {
       throw "one of the users are not valid"
@@ -88,7 +89,7 @@ async function handleLike(storyId: string): Promise<User> {
       }
       const collection = await dbService.getCollection(collectionName)
       collection.updateOne(
-        { _id: ObjectId.createFromHexString(loggedUser._id) },
+        { _id: new ObjectId(loggedUser._id) },
         { $set: { likedStoryIds: likedStoryIds } },
       )
       const user = (await getByUsername(loggedUser.username)) as User
@@ -100,10 +101,23 @@ async function handleLike(storyId: string): Promise<User> {
     throw err
   }
 }
-
+async function addStory(story: story) {
+  const collection = await dbService.getCollection(collectionName)
+  const loggedUser = await getLoggedUser()
+  const newStory: Ministory = {
+    _id: story._id.toString(),
+    imgUrl: story.imgUrl,
+  }
+  const stories = [...loggedUser.stories, newStory]
+  collection.updateOne(
+    { _id: new ObjectId(loggedUser._id.toString()) },
+    { $set: { stories: stories } },
+  )
+  return (await getByUsername(loggedUser.username)) as User
+}
 function createminiUser(user: User): byUserIntreface {
   return {
-    _id: ObjectId.createFromHexString(user._id),
+    _id: new ObjectId(user._id),
     username: user.username,
     imgUrl: user.imgUrl,
   }
@@ -143,6 +157,6 @@ async function addUser(username: string, fullname: string, password: string) {
     savedStoryIds: [],
   }
   const collection = await dbService.getCollection(collectionName)
-  await collection.insertOne(newUser)
-  return newUser
+  const user = (await collection.insertOne(newUser)) as unknown as User
+  return user
 }

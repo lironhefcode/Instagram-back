@@ -27,6 +27,7 @@ async function signup(username: string, fullname: string, password: string) {
   const saltRounds = 10
   if (!username || !password || !fullname)
     return Promise.reject("Missing credntials")
+
   const userExist = await userService.getByUsername(username)
   if (userExist) return Promise.reject("Username already taken")
   const hash = await bcrypt.hash(password, saltRounds)
