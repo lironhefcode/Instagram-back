@@ -9,7 +9,6 @@ import { setupAsyncLocalStorage } from "./midlewaers/setupAls.middleware"
 import { userRoutes } from "./api/user/user.routes"
 
 const app: Express = express()
-const __dirname = path.resolve()
 
 const corsOptions = {
   origin: [
