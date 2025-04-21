@@ -1,8 +1,7 @@
 import express, { Express } from "express"
 import cors from "cors"
 import path from "path"
-import { dirname } from "path"
-import { fileURLToPath } from "url"
+
 import { storyRoutes } from "./api/story/story.routes"
 import { authRoutes } from "./api/auth/auth.routes"
 import cookieParser from "cookie-parser"
