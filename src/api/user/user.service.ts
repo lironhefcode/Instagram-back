@@ -16,6 +16,7 @@ export const userService = {
   createminiUser,
   updateImg,
   addStory,
+  getLoggedUser,
 }
 
 const collectionName = process.env.USER_COLLECTION_NAME as string

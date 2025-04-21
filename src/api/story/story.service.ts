@@ -50,8 +50,7 @@ async function add(newStory: NewStory) {
 async function comment(txt: string, storyId: string) {
   try {
     const collection = await dbService.getCollection(collectionName)
-    const userFromCookeis = (asynLocalStorage.getStore() as Asl)
-      .loggedinUser as User
+    const userFromCookeis = (await userService.getLoggedUser()) as User
     const comment: comentInterface = {
       id: utilService.makeId(),
       txt,
